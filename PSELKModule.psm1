@@ -8,7 +8,7 @@ function Write-ELKOutput ()
         #(16-23)=LOCAL0-LOCAL7
         [string]$Facility = '22'
     )
-
+    #Hello World
     $NetClient=$null
 
     if($global:elkConfig.Protocol -eq "UDP")
@@ -40,4 +40,4 @@ function Write-ELKOutput ()
 $global:elkConfig=Get-Content ./ElkConfig.json -Raw | ConvertFrom-Json
 
 Export-ModuleMember -Function "Write-*"
-Export-ModuleMember -Variable 'global:elkConfig'
+Export-ModuleMember -Variable 'global:elkConfig'cd.
