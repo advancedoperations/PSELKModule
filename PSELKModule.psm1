@@ -23,6 +23,7 @@ function Write-ELKOutput ()
     }
     # Calculate the priority
     $Priority = ([int]$Facility * 8) + [int]$Severity
+    $Hostname = $env:COMPUTERNAME
     #Time format the SW syslog understands
     $Timestamp = Get-Date -Format "MMM dd HH:mm:ss"
     # Assemble the full syslog formatted message
