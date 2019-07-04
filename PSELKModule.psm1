@@ -40,4 +40,4 @@ function Write-ELKOutput ()
 $global:elkConfig=Get-Content ./ElkConfig.json -Raw | ConvertFrom-Json
 
 Export-ModuleMember -Function "Write-*"
-Export-ModuleMember -Variable 'global:elkConfig'cd.
+Export-ModuleMember -Variable 'global:elkConfig'
