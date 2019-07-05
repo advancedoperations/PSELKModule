@@ -14,12 +14,12 @@ function Write-ELKOutput ()
     if($global:elkConfig.Protocol -eq "UDP")
     {
         $NetClient = New-Object System.Net.Sockets.UdpClient
-        $NetClient.Connect($global:elkConfig.ElkServer, $global:elkConfig.Port)
+        $NetClient.Connect($global:elkConfig.ElkServer, $global:elkConfig.SyslogPort)
     }
     else 
     {
         $NetClient = New-Object System.Net.Sockets.TcpClient
-        $NetClient.Connect($global:elkConfig.ElkServer, $global:elkConfig.Port)
+        $NetClient.Connect($global:elkConfig.ElkServer, $global:elkConfig.SyslogPort)
     }
     # Calculate the priority
     $Priority = ([int]$Facility * 8) + [int]$Severity
@@ -35,6 +35,26 @@ function Write-ELKOutput ()
     # Send the Message
     $NetClient.Send($ByteSyslogMessage, $ByteSyslogMessage.Length)
     $NetClient.Close()
+}
+
+function Write-ELKObject ()
+{
+    param(
+        [Parameter(Mandatory=$True)]
+        [PSObject]$payload
+    )
+
+    Add-Member -InputObject $payload -NotePropertyName Timestamp -NotePropertyValue "$(Get-Date -Format "dd-MM-yy HH:mm:ss.fff")"
+    Add-Member -InputObject $payload -NotePropertyName Hostname -NotePropertyValue "$($env:computername)"
+
+    $socket = new-object System.Net.Sockets.TCPClient($global:elkConfig.elkserver,$global:elkConfig.JSONPort)
+    $tcpStream = $socket.GetStream()
+    $streamWriter = new-object System.IO.StreamWriter($tcpStream)
+    $jsonPayload=$payload | ConvertTo-Json -Depth 3
+    $streamWriter.WriteLine($jsonPayload)
+    $tcpStream.Close()
+    $socket.Close()
+
 }
 
 $global:elkConfig=Get-Content ./ElkConfig.json -Raw | ConvertFrom-Json
