@@ -41,7 +41,7 @@ function Write-ELKObject ()
 {
     param(
         [Parameter(Mandatory=$True)]
-        [PSObject]$payload
+        [PSObject]$Payload
     )
 
     Add-Member -InputObject $payload -NotePropertyName Timestamp -NotePropertyValue "$(Get-Date -Format "dd-MM-yy HH:mm:ss.fff")"
