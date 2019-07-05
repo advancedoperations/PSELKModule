@@ -46,6 +46,7 @@ function Write-ELKObject ()
 
     Add-Member -InputObject $payload -NotePropertyName Timestamp -NotePropertyValue "$(Get-Date -Format "dd-MM-yy HH:mm:ss.fff")"
     Add-Member -InputObject $payload -NotePropertyName Hostname -NotePropertyValue "$($env:computername)"
+    Add-Member -InputObject $payload -NotePropertyName Source -NotePropertyValue "PSLogOutput"
 
     $socket = new-object System.Net.Sockets.TCPClient($global:elkConfig.elkserver,$global:elkConfig.JSONPort)
     $tcpStream = $socket.GetStream()
