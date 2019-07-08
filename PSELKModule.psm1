@@ -47,15 +47,16 @@ function Write-ELKObject ()
     Add-Member -InputObject $payload -NotePropertyName Timestamp -NotePropertyValue "$(Get-Date -Format "dd-MM-yy HH:mm:ss.fff")"
     Add-Member -InputObject $payload -NotePropertyName Hostname -NotePropertyValue "$($env:computername)"
     Add-Member -InputObject $payload -NotePropertyName Source -NotePropertyValue "PSLogOutput"
-
+    $jsonPayload=$payload | ConvertTo-Json -Depth 3
+    
     $socket = new-object System.Net.Sockets.TCPClient($global:elkConfig.elkserver,$global:elkConfig.JSONPort)
     $tcpStream = $socket.GetStream()
     $streamWriter = new-object System.IO.StreamWriter($tcpStream)
-    $jsonPayload=$payload | ConvertTo-Json -Depth 3
     $streamWriter.WriteLine($jsonPayload)
     $tcpStream.Close()
     $socket.Close()
-
+    
+    #$jsonPayload
 }
 
 $global:elkConfig=Get-Content ./ElkConfig.json -Raw | ConvertFrom-Json
