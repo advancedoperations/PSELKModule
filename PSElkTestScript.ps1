@@ -2,8 +2,9 @@
 Import-Module -Name .\PSELKModule.psm1 -Verbose
 
 $object=New-Object -TypeName PSObject -Property @{
-    Message = "This is some message data."
-    OtherData = "Hello World!"
+    Message = "This is a test log message"
+    Title = "Hello World!"
+    ArrayData=@("Red","Green","Blue")
 }
 
-Write-ELKObject -payload $object
+Write-ELKHttp -payload $object

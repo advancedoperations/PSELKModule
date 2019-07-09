@@ -44,7 +44,7 @@ function Write-ELKObject ()
         [PSObject]$Payload
     )
 
-    Add-Member -InputObject $payload -NotePropertyName Timestamp -NotePropertyValue "$(Get-Date -Format "dd-MM-yy HH:mm:ss.fff")"
+    Add-Member -InputObject $payload -NotePropertyName PSTimestamp -NotePropertyValue "$(Get-Date -Format "dd-MM-yy HH:mm:ss.fff")"
     Add-Member -InputObject $payload -NotePropertyName Hostname -NotePropertyValue "$($env:computername)"
     Add-Member -InputObject $payload -NotePropertyName Source -NotePropertyValue "PSLogOutput"
     $jsonPayload=$payload | ConvertTo-Json -Depth 3
@@ -53,10 +53,26 @@ function Write-ELKObject ()
     $tcpStream = $socket.GetStream()
     $streamWriter = new-object System.IO.StreamWriter($tcpStream)
     $streamWriter.WriteLine($jsonPayload)
+    $streamwriter.Flush()
     $tcpStream.Close()
     $socket.Close()
     
     #$jsonPayload
+}
+
+function Write-ELKHttp ()
+{
+    param(
+        [Parameter(Mandatory=$True)]
+        [PSObject]$Payload
+    )
+
+    Add-Member -InputObject $payload -NotePropertyName PSTimestamp -NotePropertyValue "$(Get-Date -Format "dd-MM-yy HH:mm:ss.fff")"
+    Add-Member -InputObject $payload -NotePropertyName Hostname -NotePropertyValue "$($env:computername)"
+    Add-Member -InputObject $payload -NotePropertyName Source -NotePropertyValue "PSLogOutput"
+    $jsonPayload=$payload | ConvertTo-Json -Depth 3
+    Invoke-WebRequest -Method Put -Body $jsonPayload -Uri "http://$($global:elkConfig.elkserver):$($global:elkConfig.JSONPort)/"
+
 }
 
 $global:elkConfig=Get-Content ./ElkConfig.json -Raw | ConvertFrom-Json
