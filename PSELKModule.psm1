@@ -41,12 +41,19 @@ function Write-ELKHttp ()
 {
     param(
         [Parameter(Mandatory=$True)]
-        [PSObject]$Payload
+        [PSObject]$Payload,
+        [string]$ScriptName
     )
+
+    if(!$ScriptName)
+    {
+        $ScriptName = "UnNamedScript"
+    }
 
     Add-Member -InputObject $payload -NotePropertyName PSTimestamp -NotePropertyValue "$(Get-Date -Format "dd-MM-yy HH:mm:ss.fff")"
     Add-Member -InputObject $payload -NotePropertyName Hostname -NotePropertyValue "$($env:computername)"
     Add-Member -InputObject $payload -NotePropertyName Source -NotePropertyValue "PSLogOutput"
+    Add-Member -InputObject $payload -NotePropertyName ScriptName -NotePropertyValue $ScriptName
     $jsonPayload=$payload | ConvertTo-Json -Depth 3
     Invoke-WebRequest -Method Put -Body $jsonPayload -Uri "http://$($global:elkConfig.elkserver):$($global:elkConfig.JSONPort)/"
 
@@ -66,7 +73,18 @@ function Write-ElkMessage ()
     Write-ELKHttp $object
 }
 
+function Format-ElkDate()
+{
+    param(
+        [Parameter(Mandatory=$True,ValueFromPipeline)]
+        [datetime]$DateToFormat
+    )
+    return $DateToFormat.ToString("dd-MM-yy HH:mm:ss.fff")
+}
+
 $global:elkConfig=Get-Content ./ElkConfig.json -Raw | ConvertFrom-Json
 
 Export-ModuleMember -Function "Write-*"
+Export-ModuleMember -Function "Get-*"
+Export-ModuleMember -Function "Format-*"
 Export-ModuleMember -Variable 'global:elkConfig'
