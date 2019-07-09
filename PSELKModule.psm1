@@ -44,6 +44,7 @@ function Write-ELKHttp ()
         [PSObject]$Payload
     )
 
+    Add-Member -InputObject $payload -NotePropertyName PSTimestamp -NotePropertyValue $global:elkModuleVersion
     Add-Member -InputObject $payload -NotePropertyName PSTimestamp -NotePropertyValue "$(Get-Date -Format "dd-MM-yy HH:mm:ss.fff")"
     Add-Member -InputObject $payload -NotePropertyName Hostname -NotePropertyValue "$($env:computername)"
     Add-Member -InputObject $payload -NotePropertyName Source -NotePropertyValue "PSLogOutput"
@@ -91,6 +92,7 @@ function Format-ElkDate()
 }
 
 $global:elkConfig=Get-Content ./ElkConfig.json -Raw | ConvertFrom-Json
+$global:elkModuleVersion="0.3"
 
 Export-ModuleMember -Function "Write-*"
 Export-ModuleMember -Function "Get-*"
