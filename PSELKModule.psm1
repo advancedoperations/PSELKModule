@@ -44,7 +44,7 @@ function Write-ELKHttp ()
         [PSObject]$Payload
     )
 
-    Add-Member -InputObject $payload -NotePropertyName PSTimestamp -NotePropertyValue $global:elkModuleVersion
+    Add-Member -InputObject $payload -NotePropertyName ELKModuleVersion -NotePropertyValue $global:elkModuleVersion
     Add-Member -InputObject $payload -NotePropertyName PSTimestamp -NotePropertyValue "$(Get-Date -Format "dd-MM-yy HH:mm:ss.fff")"
     Add-Member -InputObject $payload -NotePropertyName Hostname -NotePropertyValue "$($env:computername)"
     Add-Member -InputObject $payload -NotePropertyName Source -NotePropertyValue "PSLogOutput"
