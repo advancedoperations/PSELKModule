@@ -47,9 +47,9 @@ function Write-ELKHttp ()
     Add-Member -InputObject $payload -NotePropertyName PSTimestamp -NotePropertyValue "$(Get-Date -Format "dd-MM-yy HH:mm:ss.fff")"
     Add-Member -InputObject $payload -NotePropertyName Hostname -NotePropertyValue "$($env:computername)"
     Add-Member -InputObject $payload -NotePropertyName Source -NotePropertyValue "PSLogOutput"
-    if(!$global:scriptName)
+    if($scriptName)
     {
-        Add-Member -InputObject $payload -NotePropertyName ScriptName -NotePropertyValue $global:scriptName
+        Add-Member -InputObject $payload -NotePropertyName ScriptName -NotePropertyValue $scriptName
     }
     else {
         Add-Member -InputObject $payload -NotePropertyName ScriptName -NotePropertyValue "UnNamedScript"
