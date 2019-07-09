@@ -54,6 +54,13 @@ function Write-ELKHttp ()
     else {
         Add-Member -InputObject $payload -NotePropertyName ScriptName -NotePropertyValue "UnNamedScript"
     }
+    if($instanceId)
+    {
+        Add-Member -InputObject $payload -NotePropertyName Instance -NotePropertyValue $instanceId
+    }
+    else {
+        Add-Member -InputObject $payload -NotePropertyName Instance -NotePropertyValue "NoGuid"
+    }
     
     $jsonPayload=$payload | ConvertTo-Json -Depth 3
     Invoke-WebRequest -Method Put -Body $jsonPayload -Uri "http://$($global:elkConfig.elkserver):$($global:elkConfig.JSONPort)/"

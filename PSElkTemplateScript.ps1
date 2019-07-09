@@ -15,6 +15,10 @@ $global:scriptName="PSElkTemplateScript"
 
 # Not implemented yet - placeholder
 $global:localLogFile=""
+
+# Instance ID - Don't change this
+$global:instanceId=New-Guid
+
 #endregion
 
 #region Record script start time
