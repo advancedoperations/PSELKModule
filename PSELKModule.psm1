@@ -92,7 +92,7 @@ function Format-ElkDate()
 }
 
 $global:elkConfig=Get-Content ./ElkConfig.json -Raw | ConvertFrom-Json
-$global:elkModuleVersion="0.3"
+$global:elkModuleVersion="0.4"
 
 Export-ModuleMember -Function "Write-*"
 Export-ModuleMember -Function "Get-*"
