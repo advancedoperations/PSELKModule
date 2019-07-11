@@ -72,14 +72,25 @@ function Write-ElkMessage ()
 {
     param(
         [Parameter(Mandatory=$True)]
-        [string]$Message
+        [string]$Message,
+        [bool]$Return, #If set true this will also return the message string back to the caller eg a variable for local or email logs
+        [bool]$StdOut #If set true will also write the message string to the environemnt output stream
     )
 
     $object=new-object -TypeName psobject -Property @{
         Message = $Message
     }
+    if($StdOut)
+    {
+        Write-Output $Message
+    }
 
-    Write-ELKHttp $object
+    Write-ELKHttp $object | Out-Null
+
+    if($Return)
+    {
+        return $Message
+    }
 }
 
 function Format-ElkDate()
