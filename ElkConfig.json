@@ -1,6 +1,6 @@
 [
     {
-      "ElkServer": "10.179.66.67",
+      "ElkServer": "10.178.250.50",
       "Protocol": "TCP",
       "SyslogPort": "514",
       "JSONPort": "5192"
